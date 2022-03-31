@@ -39,6 +39,7 @@ set(TEST_SOURCES
         CommonTestUtilities.cc
         BackendModel.cc
         TestBlockSmooth.cc
+        TestBooleanImage.cc
         TestContour.cc
         TestExprImage.cc
         TestFileInfo.cc
@@ -49,6 +50,7 @@ set(TEST_SOURCES
         TestHdf5Image.cc
         TestHistogram.cc
         TestIcd.cc
+        TestIntegerImage.cc
         TestMain.cc
         TestMoment.cc
         TestProgramSettings.cc
