@@ -7,8 +7,8 @@
 //# CartaIntegerImage.h : FITS Image class derived from casacore::ImageInterface for images not supported by casacore,
 //# including compressed and Int64
 
-#ifndef CARTA_BACKEND_IMAGEDATA_CARTAINTEGERIMAGE_H_
-#define CARTA_BACKEND_IMAGEDATA_CARTAINTEGERIMAGE_H_
+#ifndef CARTA_BACKEND_IMAGEDATA_CARTABOOLEANIMAGE_H_
+#define CARTA_BACKEND_IMAGEDATA_CARTABOOLEANIMAGE_H_
 
 #include <casacore/casa/Utilities/DataType.h>
 #include <casacore/images/Images/ImageInfo.h>
@@ -22,13 +22,13 @@
 
 namespace carta {
 
-class CartaIntegerImage : public casacore::ImageInterface<float> {
+class CartaBooleanImage : public casacore::ImageInterface<float> {
 public:
     // Construct an image from a pre-existing file.
-    CartaIntegerImage(const std::string& filename);
-    CartaIntegerImage(const CartaIntegerImage& other);
+    CartaBooleanImage(const std::string& filename);
+    CartaBooleanImage(const CartaBooleanImage& other);
 
-    ~CartaIntegerImage() override;
+    ~CartaBooleanImage() override;
 
     // implement casacore ImageInterface
     casacore::String imageType() const override;
@@ -52,10 +52,10 @@ public:
     casacore::Bool doGetMaskSlice(casacore::Array<bool>& buffer, const casacore::Slicer& section) override;
 
 private:
-    std::unique_ptr<casacore::PagedImage<casacore::Int>> _image;
+    std::unique_ptr<casacore::PagedImage<casacore::Bool>> _image;
     std::string _filename;
 };
 
 } // namespace carta
 
-#endif // CARTA_BACKEND_IMAGEDATA_CARTAINTEGERIMAGE_H_
+#endif // CARTA_BACKEND_IMAGEDATA_CARTABOOLEANIMAGE_H_
