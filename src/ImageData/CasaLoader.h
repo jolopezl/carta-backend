@@ -9,6 +9,8 @@
 
 #include <casacore/images/Images/PagedImage.h>
 
+#include "CartaBooleanImage.h"
+#include "CartaIntegerImage.h"
 #include "FileLoader.h"
 
 namespace carta {
@@ -24,7 +26,14 @@ CasaLoader::CasaLoader(const std::string& filename) : FileLoader(filename) {}
 
 void CasaLoader::OpenFile(const std::string& /*hdu*/) {
     if (!_image) {
-        _image.reset(new casacore::PagedImage<float>(_filename));
+        casacore::DataType pixel_type = casacore::imagePixelType(_filename);
+        if (pixel_type == casacore::TpInt) {
+            _image.reset(new CartaIntegerImage(_filename));
+        } else if (pixel_type == casacore::TpBool) {
+            _image.reset(new CartaBooleanImage(_filename));
+        } else {
+            _image.reset(new casacore::PagedImage<float>(_filename));
+        }
 
         if (!_image) {
             throw(casacore::AipsError("Error opening image"));
