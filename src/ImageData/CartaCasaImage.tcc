@@ -4,8 +4,8 @@
    SPDX-License-Identifier: GPL-3.0-or-later
 */
 
-#ifndef CARTA_BACKEND_IMAGEDATA_CARTAIMAGEDATATYPE_TCC_
-#define CARTA_BACKEND_IMAGEDATA_CARTAIMAGEDATATYPE_TCC_
+#ifndef CARTA_BACKEND_IMAGEDATA_CARTACASAIMAGE_TCC_
+#define CARTA_BACKEND_IMAGEDATA_CARTACASAIMAGE_TCC_
 
 #include <casacore/casa/BasicSL/Constants.h>
 #include <casacore/casa/OS/File.h>
@@ -31,7 +31,7 @@
 using namespace carta;
 
 template <class T>
-CartaImageDataType<T>::CartaImageDataType(const std::string& filename) : casacore::ImageInterface<float>(), _filename(filename) {
+CartaCasaImage<T>::CartaCasaImage(const std::string& filename) : casacore::ImageInterface<float>(), _filename(filename) {
     switch (CasacoreImageType(filename)) {
         case casacore::ImageOpener::AIPSPP:
             _image.reset(new casacore::PagedImage<T>(filename));
@@ -44,8 +44,7 @@ CartaImageDataType<T>::CartaImageDataType(const std::string& filename) : casacor
 }
 
 template <class T>
-CartaImageDataType<T>::CartaImageDataType(const CartaImageDataType& other)
-    : casacore::ImageInterface<float>(other), _filename(other._filename) {
+CartaCasaImage<T>::CartaCasaImage(const CartaCasaImage& other) : casacore::ImageInterface<float>(other), _filename(other._filename) {
     switch (CasacoreImageType(other._filename)) {
         case casacore::ImageOpener::AIPSPP:
             _image.reset(new casacore::PagedImage<T>(other._filename));
@@ -58,37 +57,37 @@ CartaImageDataType<T>::CartaImageDataType(const CartaImageDataType& other)
 }
 
 template <class T>
-CartaImageDataType<T>::~CartaImageDataType() {}
+CartaCasaImage<T>::~CartaCasaImage() {}
 
 // Image interface
 
 template <class T>
-casacore::String CartaImageDataType<T>::imageType() const {
-    return "CartaImageDataType";
+casacore::String CartaCasaImage<T>::imageType() const {
+    return "CartaCasaImage";
 }
 
 template <class T>
-casacore::String CartaImageDataType<T>::name(bool stripPath) const {
+casacore::String CartaCasaImage<T>::name(bool stripPath) const {
     return _image->name();
 }
 
 template <class T>
-casacore::IPosition CartaImageDataType<T>::shape() const {
+casacore::IPosition CartaCasaImage<T>::shape() const {
     return _image->shape();
 }
 
 template <class T>
-casacore::Bool CartaImageDataType<T>::ok() const {
+casacore::Bool CartaCasaImage<T>::ok() const {
     return _image->ok();
 }
 
 template <class T>
-casacore::DataType CartaImageDataType<T>::dataType() const {
+casacore::DataType CartaCasaImage<T>::dataType() const {
     return casacore::DataType::TpFloat;
 }
 
 template <class T>
-casacore::Bool CartaImageDataType<T>::doGetSlice(casacore::Array<float>& buffer, const casacore::Slicer& section) {
+casacore::Bool CartaCasaImage<T>::doGetSlice(casacore::Array<float>& buffer, const casacore::Slicer& section) {
     if constexpr (std::is_same_v<T, casacore::Int>) {
         casacore::SubImage<casacore::Int> sub_image(*_image, section);
         casacore::RO_MaskedLatticeIterator<casacore::Int> lattice_iter(sub_image);
@@ -129,59 +128,59 @@ casacore::Bool CartaImageDataType<T>::doGetSlice(casacore::Array<float>& buffer,
 }
 
 template <class T>
-void CartaImageDataType<T>::doPutSlice(
+void CartaCasaImage<T>::doPutSlice(
     const casacore::Array<float>& buffer, const casacore::IPosition& where, const casacore::IPosition& stride) {
-    throw(casacore::AipsError("CartaImageDataType::doPutSlice - image is not writable"));
+    throw(casacore::AipsError("CartaCasaImage::doPutSlice - image is not writable"));
 }
 
 template <class T>
-const casacore::LatticeRegion* CartaImageDataType<T>::getRegionPtr() const {
+const casacore::LatticeRegion* CartaCasaImage<T>::getRegionPtr() const {
     return nullptr;
 }
 
 template <class T>
-casacore::ImageInterface<float>* CartaImageDataType<T>::cloneII() const {
-    return new CartaImageDataType(*this);
+casacore::ImageInterface<float>* CartaCasaImage<T>::cloneII() const {
+    return new CartaCasaImage(*this);
 }
 
 template <class T>
-void CartaImageDataType<T>::resize(const casacore::TiledShape& newShape) {
-    throw(casacore::AipsError("CartaImageDataType::resize - image is not writable"));
+void CartaCasaImage<T>::resize(const casacore::TiledShape& newShape) {
+    throw(casacore::AipsError("CartaCasaImage::resize - image is not writable"));
 }
 
 template <class T>
-casacore::uInt CartaImageDataType<T>::advisedMaxPixels() const {
+casacore::uInt CartaCasaImage<T>::advisedMaxPixels() const {
     return _image->advisedMaxPixels();
 }
 
 template <class T>
-casacore::IPosition CartaImageDataType<T>::doNiceCursorShape(casacore::uInt) const {
+casacore::IPosition CartaCasaImage<T>::doNiceCursorShape(casacore::uInt) const {
     return _image->doNiceCursorShape(_image->advisedMaxPixels());
 }
 
 template <class T>
-casacore::Bool CartaImageDataType<T>::isMasked() const {
+casacore::Bool CartaCasaImage<T>::isMasked() const {
     return _image->isMasked();
 }
 
 template <class T>
-casacore::Bool CartaImageDataType<T>::hasPixelMask() const {
+casacore::Bool CartaCasaImage<T>::hasPixelMask() const {
     return _image->hasPixelMask();
 }
 
 template <class T>
-const casacore::Lattice<bool>& CartaImageDataType<T>::pixelMask() const {
+const casacore::Lattice<bool>& CartaCasaImage<T>::pixelMask() const {
     return _image->pixelMask();
 }
 
 template <class T>
-casacore::Lattice<bool>& CartaImageDataType<T>::pixelMask() {
+casacore::Lattice<bool>& CartaCasaImage<T>::pixelMask() {
     return _image->pixelMask();
 }
 
 template <class T>
-casacore::Bool CartaImageDataType<T>::doGetMaskSlice(casacore::Array<bool>& buffer, const casacore::Slicer& section) {
+casacore::Bool CartaCasaImage<T>::doGetMaskSlice(casacore::Array<bool>& buffer, const casacore::Slicer& section) {
     return _image->doGetMaskSlice(buffer, section);
 }
 
-#endif // CARTA_BACKEND_IMAGEDATA_CARTAIMAGEDATATYPE_TCC_
+#endif // CARTA_BACKEND_IMAGEDATA_CARTACASAIMAGE_TCC_

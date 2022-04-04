@@ -4,8 +4,8 @@
    SPDX-License-Identifier: GPL-3.0-or-later
 */
 
-#ifndef CARTA_BACKEND_IMAGEDATA_CARTAIMAGEDATATYPE_H_
-#define CARTA_BACKEND_IMAGEDATA_CARTAIMAGEDATATYPE_H_
+#ifndef CARTA_BACKEND_IMAGEDATA_CARTACASAIMAGE_H_
+#define CARTA_BACKEND_IMAGEDATA_CARTACASAIMAGE_H_
 
 #include <casacore/casa/Utilities/DataType.h>
 #include <casacore/images/Images/ImageInfo.h>
@@ -20,12 +20,12 @@
 namespace carta {
 
 template <class T>
-class CartaImageDataType : public casacore::ImageInterface<float> {
+class CartaCasaImage : public casacore::ImageInterface<float> {
 public:
-    CartaImageDataType(const std::string& filename);
-    CartaImageDataType(const CartaImageDataType& other);
+    CartaCasaImage(const std::string& filename);
+    CartaCasaImage(const CartaCasaImage& other);
 
-    ~CartaImageDataType() override;
+    ~CartaCasaImage() override;
 
     // implement casacore ImageInterface
     casacore::String imageType() const override;
@@ -55,6 +55,6 @@ protected:
 
 } // namespace carta
 
-#include "CartaImageDataType.tcc"
+#include "CartaCasaImage.tcc"
 
-#endif // CARTA_BACKEND_IMAGEDATA_CARTAIMAGEDATATYPE_H_
+#endif // CARTA_BACKEND_IMAGEDATA_CARTACASAIMAGE_H_

@@ -9,7 +9,7 @@
 #include "CommonTestUtilities.h"
 #include "FileList/FileExtInfoLoader.h"
 #include "FileList/FileInfoLoader.h"
-#include "ImageData/CartaImageDataType.h"
+#include "ImageData/CartaCasaImage.h"
 #include "Session/Session.h"
 #include "Util/Message.h"
 
@@ -25,7 +25,7 @@ public:
         if (image_type == casacore::ImageOpener::AIPSPP) {
             casacore::DataType pixel_type = casacore::imagePixelType(filename);
             if (pixel_type == casacore::TpBool) {
-                casacore::PagedImage<casacore::Bool> image(filename); ////
+                casacore::PagedImage<casacore::Bool> image(filename);
                 casacore::DataType data_type = image.dataType();
                 auto coord = image.coordinates();
                 auto shape = image.shape();
@@ -33,30 +33,14 @@ public:
                 auto nice_cursor_shape = image.doNiceCursorShape(image.advisedMaxPixels());
                 auto nice_cursor_shape_vec = nice_cursor_shape.asStdVector();
 
-                // ==============================================================
-                std::cerr << "image.imageType() = " << image.imageType() << "\n";
-                std::cerr << "image.name() = " << image.name() << "\n";
-                std::cerr << "image.ok() = " << image.ok() << "\n";
-                std::cerr << "image.dataType() = " << data_type << "\n";
-                for (int i = 0; i < shape_vec.size(); ++i) {
-                    std::cerr << "shape[" << i << "] = " << shape_vec[i] << "\n";
-                }
-                std::cerr << "image.advisedMaxPixels() = " << image.advisedMaxPixels() << "\n";
-                for (int i = 0; i < nice_cursor_shape_vec.size(); ++i) {
-                    std::cerr << "nice_cursor_shape_vec[" << i << "] = " << nice_cursor_shape_vec[i] << "\n";
-                }
-                std::cerr << "image.isMasked() = " << image.isMasked() << "\n";
-                std::cerr << "image.hasPixelMask() = " << image.hasPixelMask() << "\n";
-                // ==============================================================
-
                 casacore::IPosition start(image.shape().size());
                 start = 0;
                 casacore::IPosition end(image.shape());
                 end -= 1;
                 casacore::Slicer section(start, end, casacore::Slicer::endIsLast);
                 casacore::Array<casacore::Bool> data(section.length());
-                casacore::SubImage<casacore::Bool> sub_image(image, section);               ////
-                casacore::RO_MaskedLatticeIterator<casacore::Bool> lattice_iter(sub_image); ////
+                casacore::SubImage<casacore::Bool> sub_image(image, section);
+                casacore::RO_MaskedLatticeIterator<casacore::Bool> lattice_iter(sub_image);
 
                 for (lattice_iter.reset(); !lattice_iter.atEnd(); ++lattice_iter) {
                     casacore::Array<casacore::Bool> cursor_data = lattice_iter.cursor();
@@ -81,11 +65,8 @@ public:
                     casacore::Slicer cursor_slicer(cursor_position, cursor_shape);
                     data(cursor_slicer) = cursor_data;
                 }
-
                 results.assign(data.begin(), data.end());
-
                 EXPECT_EQ(results.size(), shape.product());
-
                 for (int i = 0; i < results.size(); ++i) {
                     if (results[i] > 0.0) {
                         std::cerr << "results[" << i << "] = " << results[i] << "\n";
@@ -101,7 +82,7 @@ public:
         if (image_type == casacore::ImageOpener::AIPSPP) {
             casacore::DataType pixel_type = casacore::imagePixelType(filename);
             if (pixel_type == casacore::TpBool) {
-                carta::CartaImageDataType<casacore::Bool> image(filename); ////
+                carta::CartaCasaImage<casacore::Bool> image(filename);
                 casacore::DataType data_type = image.dataType();
                 auto coord = image.coordinates();
                 auto shape = image.shape();
@@ -109,33 +90,17 @@ public:
                 auto nice_cursor_shape = image.doNiceCursorShape(image.advisedMaxPixels());
                 auto nice_cursor_shape_vec = nice_cursor_shape.asStdVector();
 
-                // ==============================================================
-                std::cerr << "image.imageType() = " << image.imageType() << "\n";
-                std::cerr << "image.name() = " << image.name() << "\n";
-                std::cerr << "image.ok() = " << image.ok() << "\n";
-                std::cerr << "image.dataType() = " << data_type << "\n";
-                for (int i = 0; i < shape_vec.size(); ++i) {
-                    std::cerr << "shape[" << i << "] = " << shape_vec[i] << "\n";
-                }
-                std::cerr << "image.advisedMaxPixels() = " << image.advisedMaxPixels() << "\n";
-                for (int i = 0; i < nice_cursor_shape_vec.size(); ++i) {
-                    std::cerr << "nice_cursor_shape_vec[" << i << "] = " << nice_cursor_shape_vec[i] << "\n";
-                }
-                std::cerr << "image.isMasked() = " << image.isMasked() << "\n";
-                std::cerr << "image.hasPixelMask() = " << image.hasPixelMask() << "\n";
-                // ==============================================================
-
                 casacore::IPosition start(image.shape().size());
                 start = 0;
                 casacore::IPosition end(image.shape());
                 end -= 1;
                 casacore::Slicer section(start, end, casacore::Slicer::endIsLast);
                 casacore::Array<float> data(section.length());
-                casacore::SubImage<float> sub_image(image, section);               ////
-                casacore::RO_MaskedLatticeIterator<float> lattice_iter(sub_image); ////
+                casacore::SubImage<float> sub_image(image, section);
+                casacore::RO_MaskedLatticeIterator<float> lattice_iter(sub_image);
 
                 for (lattice_iter.reset(); !lattice_iter.atEnd(); ++lattice_iter) {
-                    casacore::Array<float> cursor_data = lattice_iter.cursor(); ////
+                    casacore::Array<float> cursor_data = lattice_iter.cursor();
                     if (image.isMasked()) {
                         casacore::Array<float> masked_data(cursor_data);
                         const casacore::Array<bool> cursor_mask = lattice_iter.getMask();
@@ -157,11 +122,8 @@ public:
                     casacore::Slicer cursor_slicer(cursor_position, cursor_shape);
                     data(cursor_slicer) = cursor_data;
                 }
-
                 results = data.tovector();
-
                 EXPECT_EQ(results.size(), shape.product());
-
                 for (int i = 0; i < results.size(); ++i) {
                     if (results[i] > 0.0) {
                         std::cerr << "results[" << i << "] = " << results[i] << "\n";
