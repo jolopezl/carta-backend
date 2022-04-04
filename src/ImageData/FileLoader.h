@@ -20,8 +20,6 @@
 
 namespace carta {
 
-class Frame;
-
 class FileLoader {
 public:
     using ImageRef = std::shared_ptr<casacore::ImageInterface<float>>;

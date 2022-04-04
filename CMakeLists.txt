@@ -196,8 +196,6 @@ set(SOURCE_FILES
         src/FileList/FitsHduList.cc
         src/Frame/Frame.cc
         src/HttpServer/HttpServer.cc
-        src/ImageData/CartaBooleanImage.cc
-        src/ImageData/CartaIntegerImage.cc
         src/ImageData/CartaFitsImage.cc
         src/ImageData/CartaHdf5Image.cc
         src/ImageData/CartaMiriadImage.cc

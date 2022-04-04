@@ -9,7 +9,7 @@
 #include "CommonTestUtilities.h"
 #include "FileList/FileExtInfoLoader.h"
 #include "FileList/FileInfoLoader.h"
-#include "ImageData/CartaIntegerImage.h"
+#include "ImageData/CartaImageDataType.h"
 #include "Session/Session.h"
 #include "Util/Message.h"
 
@@ -101,7 +101,7 @@ public:
         if (image_type == casacore::ImageOpener::AIPSPP) {
             casacore::DataType pixel_type = casacore::imagePixelType(filename);
             if (pixel_type == casacore::TpInt) {
-                carta::CartaIntegerImage image(filename); ////
+                carta::CartaImageDataType<casacore::Int> image(filename); ////
                 casacore::DataType data_type = image.dataType();
                 auto coord = image.coordinates();
                 auto shape = image.shape();
