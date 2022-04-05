@@ -7,13 +7,7 @@
 #ifndef CARTA_BACKEND_IMAGEDATA_CARTACASAIMAGE_H_
 #define CARTA_BACKEND_IMAGEDATA_CARTACASAIMAGE_H_
 
-#include <casacore/casa/Utilities/DataType.h>
-#include <casacore/images/Images/ImageInfo.h>
 #include <casacore/images/Images/ImageInterface.h>
-#include <casacore/lattices/Lattices/TiledShape.h>
-
-#include <fitsio.h>
-#include <images/Images/PagedImage.h>
 
 #include "Logger/Logger.h"
 

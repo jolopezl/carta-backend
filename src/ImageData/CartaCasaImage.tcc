@@ -7,24 +7,8 @@
 #ifndef CARTA_BACKEND_IMAGEDATA_CARTACASAIMAGE_TCC_
 #define CARTA_BACKEND_IMAGEDATA_CARTACASAIMAGE_TCC_
 
-#include <casacore/casa/BasicSL/Constants.h>
-#include <casacore/casa/OS/File.h>
-#include <casacore/casa/Quanta/UnitMap.h>
-#include <casacore/coordinates/Coordinates/DirectionCoordinate.h>
-#include <casacore/coordinates/Coordinates/FITSCoordinateUtil.h>
-#include <casacore/coordinates/Coordinates/SpectralCoordinate.h>
-#include <casacore/images/Images/ImageFITSConverter.h>
+#include <casacore/images/Images/SubImage.h>
 #include <casacore/lattices/Lattices/MaskedLatticeIterator.h>
-#include <casacore/measures/Measures/MDirection.h>
-#include <casacore/measures/Measures/Stokes.h>
-#include <casacore/tables/DataMan/TiledFileAccess.h>
-
-#include <images/Images/SubImage.h>
-#include <wcslib/fitshdr.h>
-#include <wcslib/wcs.h>
-#include <wcslib/wcsfix.h>
-#include <wcslib/wcshdr.h>
-#include <wcslib/wcsmath.h>
 
 #include "Util/Casacore.h"
 
