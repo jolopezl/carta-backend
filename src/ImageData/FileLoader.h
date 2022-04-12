@@ -17,13 +17,13 @@
 #include <carta-protobuf/enums.pb.h>
 
 #include "ImageData/FileInfo.h"
+#include "Util/Casacore.h"
 
 namespace carta {
 
 class FileLoader {
 public:
     using ImageRef = std::shared_ptr<casacore::ImageInterface<float>>;
-    using IPos = casacore::IPosition;
 
     // directory only for ExprLoader, is_gz only for FitsLoader
     FileLoader(const std::string& filename, const std::string& directory = "", bool is_gz = false);
@@ -50,10 +50,9 @@ public:
     bool GetBeams(std::vector<CARTA::Beam>& beams, std::string& error);
 
     // Image shape and coordinate system axes
-    bool GetShape(IPos& shape);
-    bool GetCoordinateSystem(casacore::CoordinateSystem& coord_sys);
-    bool FindCoordinateAxes(IPos& shape, int& spectral_axis, int& z_axis, int& stokes_axis, std::string& message);
-    std::vector<int> GetRenderAxes(); // Determine axes used for image raster data
+    casacore::IPosition GetShape();
+    std::shared_ptr<casacore::CoordinateSystem> GetCoordinateSystem();
+    bool GetCoordinateAxes(CoordinateAxes& coord_axes, std::string& message);
 
     // Slice image data (with mask applied)
     bool GetSlice(casacore::Array<float>& data, const casacore::Slicer& slicer);
@@ -89,9 +88,6 @@ public:
     std::string GetFileName();
 
     // Handle stokes type index
-    virtual void SetStokesCrval(float stokes_crval);
-    virtual void SetStokesCrpix(float stokes_crpix);
-    virtual void SetStokesCdelt(int stokes_cdelt);
     virtual bool GetStokesTypeIndex(const CARTA::PolarizationType& stokes_type, int& stokes_index);
     std::unordered_map<CARTA::PolarizationType, int> GetStokesIndices() {
         return _stokes_indices;
@@ -112,16 +108,11 @@ protected:
 
     std::shared_ptr<casacore::ImageInterface<casacore::Float>> _image;
 
-    // Save image properties; only reopen for data or beams
-    // Axes, dimension values
+    // Image properties; only reopen image for data or beams
+    std::shared_ptr<casacore::CoordinateSystem> _coord_sys;
     casacore::IPosition _image_shape;
+    CoordinateAxes _coord_axes;
     size_t _num_dims, _image_plane_size;
-    size_t _width, _height, _depth, _num_stokes;
-    int _z_axis, _stokes_axis;
-    std::vector<int> _render_axes;
-    // Coordinate system
-    casacore::CoordinateSystem _coord_sys;
-    // Pixel mask
     bool _has_pixel_mask;
 
     // Storage for z-plane and cube statistics
@@ -130,15 +121,12 @@ protected:
 
     // Storage for the stokes type vs. stokes index
     std::unordered_map<CARTA::PolarizationType, int> _stokes_indices;
-    float _stokes_crval;
-    float _stokes_crpix;
-    int _stokes_cdelt;
 
     // Return the shape of the specified stats dataset
-    virtual const IPos GetStatsDataShape(FileInfo::Data ds);
+    virtual const casacore::IPosition GetStatsDataShape(FileInfo::Data ds);
 
     // Return stats data as a casacore::Array of type casacore::Float or casacore::Int64
-    virtual casacore::ArrayBase* GetStatsData(FileInfo::Data ds);
+    virtual std::unique_ptr<casacore::ArrayBase> GetStatsData(FileInfo::Data ds);
 
     // Functions for loading individual types of statistics
     virtual void LoadStats2DBasic(FileInfo::Data ds);

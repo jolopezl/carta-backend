@@ -95,8 +95,8 @@ public:
     // Get the full name of image file
     std::string GetFileName();
 
-    // Returns pointer to CoordinateSystem clone; caller must delete
-    casacore::CoordinateSystem* CoordinateSystem();
+    // Returns shared ptr to CoordinateSystem
+    std::shared_ptr<casacore::CoordinateSystem> CoordinateSystem();
 
     // Image/Frame info
     casacore::IPosition ImageShape();
@@ -165,7 +165,7 @@ public:
     bool IsConnected();
 
     // Apply Region/Slicer to image (Frame manages image mutex) and get shape, data, or stats
-    casacore::LCRegion* GetImageRegion(int file_id, std::shared_ptr<Region> region, bool report_error = true);
+    std::shared_ptr<casacore::LCRegion> GetImageRegion(int file_id, std::shared_ptr<Region> region, bool report_error = true);
     bool GetImageRegion(int file_id, const AxisRange& z_range, int stokes, casacore::ImageRegion& image_region);
     casacore::IPosition GetRegionShape(const casacore::LattRegionHolder& region);
     // Returns data vector
@@ -239,7 +239,7 @@ protected:
     void ValidateChannelStokes(std::vector<int>& channels, std::vector<int>& stokes, const CARTA::SaveFile& save_file_msg);
     casacore::Slicer GetExportImageSlicer(const CARTA::SaveFile& save_file_msg, casacore::IPosition image_shape);
     casacore::Slicer GetExportRegionSlicer(const CARTA::SaveFile& save_file_msg, casacore::IPosition image_shape,
-        casacore::IPosition region_shape, casacore::LCRegion* image_region, casacore::LattRegionHolder& latt_region_holder);
+        casacore::IPosition region_shape, std::shared_ptr<casacore::LCRegion> image_region, casacore::LattRegionHolder& latt_region_holder);
 
     void InitImageHistogramConfigs();
 
@@ -262,10 +262,8 @@ protected:
     std::shared_ptr<FileLoader> _loader;
 
     // Shape and axis info: X, Y, Z, Stokes
-    casacore::IPosition _image_shape;
-    int _x_axis, _y_axis, _z_axis, _spectral_axis, _stokes_axis;
+    CoordinateAxes _coord_axes;
     int _z_index, _stokes_index; // current index
-    size_t _width, _height, _depth, _num_stokes;
 
     // Image settings
     CARTA::AddRequiredTiles _required_animation_tiles;
