@@ -28,6 +28,7 @@
 #include <carta-protobuf/export_region.pb.h>
 #include <carta-protobuf/file_info.pb.h>
 #include <carta-protobuf/file_list.pb.h>
+#include <carta-protobuf/fitting_request.pb.h>
 #include <carta-protobuf/import_region.pb.h>
 #include <carta-protobuf/moment_request.pb.h>
 #include <carta-protobuf/open_file.pb.h>
@@ -125,6 +126,8 @@ public:
     bool OnConcatStokesFiles(const CARTA::ConcatStokesFiles& message, uint32_t request_id);
     void OnPvRequest(const CARTA::PvRequest& pv_request, uint32_t request_id);
     void OnStopPvCalc(const CARTA::StopPvCalc& stop_pv_calc);
+    void OnFittingRequest(const CARTA::FittingRequest& fitting_request, uint32_t request_id);
+    void OnSetVectorOverlayParameters(const CARTA::SetVectorOverlayParameters& message);
 
     void AddToSetChannelQueue(CARTA::SetImageChannels message, uint32_t request_id) {
         std::pair<CARTA::SetImageChannels, uint32_t> rp;
@@ -264,7 +267,7 @@ protected:
 
     // File info for open generated image (not disk image)
     bool FillExtendedFileInfo(CARTA::FileInfoExtended& extended_info, std::shared_ptr<casacore::ImageInterface<float>> image,
-        const std::string& filename, std::string& message);
+        const std::string& filename, std::string& message, std::shared_ptr<FileLoader>& image_loader);
 
     // Delete Frame(s)
     void DeleteFrame(int file_id);
@@ -282,6 +285,7 @@ protected:
     bool SendRegionStatsData(int file_id, int region_id);
     void UpdateImageData(int file_id, bool send_image_histogram, bool z_changed, bool stokes_changed);
     void UpdateRegionData(int file_id, int region_id, bool z_changed, bool stokes_changed);
+    bool SendVectorFieldData(int file_id);
 
     // Send protobuf messages
     void SendEvent(CARTA::EventType event_type, u_int32_t event_id, const google::protobuf::MessageLite& message, bool compress = true);
