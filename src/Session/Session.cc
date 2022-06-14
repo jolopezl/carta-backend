@@ -33,7 +33,6 @@
 #include "ImageGenerators/ImageGenerator.h"
 #include "Logger/Logger.h"
 #include "OnMessageTask.h"
-#include "SpectralLine/SpectralLineCrawler.h"
 #include "ThreadingManager/ThreadingManager.h"
 #include "Timer/Timer.h"
 #include "Util/App.h"
@@ -1333,19 +1332,6 @@ void Session::OnSaveFile(const CARTA::SaveFile& save_file, uint32_t request_id) 
     }
 }
 
-void Session::OnSplataloguePing(uint32_t request_id) {
-    CARTA::SplataloguePong splatalogue_pong;
-    SpectralLineCrawler::Ping(splatalogue_pong);
-    SendEvent(CARTA::EventType::SPLATALOGUE_PONG, request_id, splatalogue_pong);
-}
-
-void Session::OnSpectralLineRequest(CARTA::SpectralLineRequest spectral_line_request, uint32_t request_id) {
-    CARTA::SpectralLineResponse spectral_line_response;
-    SpectralLineCrawler::SendRequest(
-        spectral_line_request.frequency_range(), spectral_line_request.line_intensity_lower_limit(), spectral_line_response);
-    SendEvent(CARTA::EventType::SPECTRAL_LINE_RESPONSE, request_id, spectral_line_response);
-}
-
 bool Session::OnConcatStokesFiles(const CARTA::ConcatStokesFiles& message, uint32_t request_id) {
     bool success(false);
     if (!_stokes_files_connector) {
@@ -1850,7 +1836,6 @@ void Session::UpdateImageData(int file_id, bool send_image_histogram, bool z_cha
     // Do not send image histogram if already sent with raster data.
     if (_frames.count(file_id)) {
         if (stokes_changed) {
-            SendRegionHistogramData(file_id, CUBE_REGION_ID);
             SendSpectralProfileData(file_id, CURSOR_REGION_ID, stokes_changed);
         }
 
