@@ -144,9 +144,17 @@ pipeline {
                     }
                 }
             }
-       }
-       stage('Unit Tests') {
-           parallel {
+        }
+        post {
+            success {
+                setBuildStatus("build succeeded", "SUCCESS");
+            }
+            failure {
+                setBuildStatus("build failed", "FAILURE");
+            }
+        }
+        stage('Unit Tests') {
+            parallel {
                 stage('1 Ubuntu 18.04') {
                     agent {
                         label "bionic-agent"
@@ -513,14 +521,20 @@ pipeline {
                 }
             }
         }
+        post {
+            success {
+                setBuildStatus("build succeeded", "SUCCESS");
+            }
+            failure {
+                setBuildStatus("build failed", "FAILURE");
+            }
+        }
         stage('Finished') {
             agent {
             label "macos12-agent"
             }
             steps {
-                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                    sh "ls"
-                } 
+                echo "finished"
             } 
         }
     }
