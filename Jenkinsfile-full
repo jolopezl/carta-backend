@@ -14,7 +14,7 @@ pipeline {
         timeout(time: 2, unit: 'HOURS') 
     }
     triggers {
-        cron('0 8 * * *')
+        cron('0 7 * * *')
     }
     stages {
         stage('Build') {
@@ -36,14 +36,6 @@ pipeline {
                             }
                         }
                     }
-                    post {
-                        success {
-                            setBuildStatus("build succeeded", "SUCCESS");
-                        }
-                        failure {
-                            setBuildStatus("build failed", "FAILURE");
-                        }
-                    }
                 }
                 stage('2 Ubuntu 20.04') {
                     agent {
@@ -60,14 +52,6 @@ pipeline {
                                 stash includes: "test/**/*", name: "focal-unit-tests"
                                 stash includes: "carta_backend", name: "focal-backend"
                             }
-                        }
-                    }
-                    post {
-                        success {
-                            setBuildStatus("build succeeded", "SUCCESS");
-                        }
-                        failure {
-                            setBuildStatus("build failed", "FAILURE");
                         }
                     }
                 }
@@ -88,14 +72,6 @@ pipeline {
                             }
                         }
                     }
-                    post {
-                        success {
-                            setBuildStatus("build succeeded", "SUCCESS");
-                        }
-                        failure {
-                            setBuildStatus("build failed", "FAILURE");
-                        }
-                    }
                 }
                 stage('4 macOS 11') {
                     agent {
@@ -113,14 +89,6 @@ pipeline {
                             }
                         }
                     }
-                    post {
-                        success {
-                            setBuildStatus("build succeeded", "SUCCESS");
-                        }
-                        failure {
-                            setBuildStatus("build failed", "FAILURE");
-                        }
-                    }
                 }
                 stage('5 macOS 12') {
                     agent {
@@ -136,14 +104,6 @@ pipeline {
                                 sh "make -j 8"
                                 stash includes: "carta_backend", name: "macos12-backend"
                             }
-                        }
-                    }
-                    post {
-                        success {
-                            setBuildStatus("build succeeded", "SUCCESS");
-                        }
-                        failure {
-                            setBuildStatus("build failed", "FAILURE");
                         }
                     }
                 }
@@ -164,14 +124,6 @@ pipeline {
                             }
                         }
                     }
-                    post {
-                        success {
-                            setBuildStatus("build succeeded", "SUCCESS");
-                        }
-                        failure {
-                            setBuildStatus("build failed", "FAILURE");
-                        }
-                    }
                 }
                 stage('7 RHEL8') {
                     agent {
@@ -188,14 +140,6 @@ pipeline {
                                 stash includes: "test/**/*", name: "rhel8-unit-tests"
                                 stash includes: "carta_backend", name: "rhel8-backend"
                             }
-                        }
-                    }
-                    post {
-                        success {
-                            setBuildStatus("build succeeded", "SUCCESS");
-                        }
-                        failure {
-                            setBuildStatus("build failed", "FAILURE");
                         }
                     }
                 }
@@ -272,12 +216,6 @@ pipeline {
                         always {
                             junit 'build/test/macos11_test_detail.xml'
                         }
-                        success {
-                            setBuildStatus("build succeeded", "SUCCESS");
-                        }
-                        failure {
-                            setBuildStatus("build failed", "FAILURE");
-                        }   
                     }
                 }
                 stage('5 macOS 12') {
@@ -295,12 +233,6 @@ pipeline {
                         always {
                             junit 'build/test/macos12_test_detail.xml'
                         }
-                        success {
-                            setBuildStatus("build succeeded", "SUCCESS");
-                        }
-                        failure {
-                            setBuildStatus("build failed", "FAILURE");
-                        }   
                     }
                 }
                 stage('6 RHEL7') {
@@ -580,6 +512,14 @@ pipeline {
                     }
                 }
             }
+        }
+    }
+    post {
+        success {
+            setBuildStatus("Build succeeded", "SUCCESS");
+        }
+        failure {
+            setBuildStatus("Build failed", "FAILURE");
         }
     }
 }
