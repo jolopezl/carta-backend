@@ -646,7 +646,9 @@ pipeline {
             label "macos12-agent"
             }
             steps {
-                echo "finished"
+                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                    sh "ls"
+                }
             } 
         }
     }
