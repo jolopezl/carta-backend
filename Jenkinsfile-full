@@ -36,6 +36,14 @@ pipeline {
                             }
                         }
                     }
+                    post {
+                        success {
+                            setBuildStatus("build succeeded", "SUCCESS");
+                        }
+                        failure {
+                            setBuildStatus("build failed", "FAILURE");
+                        }
+                    }
                 }
                 stage('2 Ubuntu 20.04') {
                     agent {
@@ -54,6 +62,14 @@ pipeline {
                             }
                         }
                     }
+                    post {
+                        success {
+                            setBuildStatus("build succeeded", "SUCCESS");
+                        }
+                        failure {
+                            setBuildStatus("build failed", "FAILURE");
+                        }
+                    }
                 }
                 stage('3 Ubuntu 22.04') {
                     agent {
@@ -70,6 +86,14 @@ pipeline {
                                 stash includes: "test/**/*", name: "jammy-unit-tests"
                                 stash includes: "carta_backend", name: "jammy-backend"
                             }
+                        }
+                    }
+                    post {
+                        success {
+                            setBuildStatus("build succeeded", "SUCCESS");
+                        }
+                        failure {
+                            setBuildStatus("build failed", "FAILURE");
                         }
                     }
                 }
@@ -106,6 +130,14 @@ pipeline {
                             }
                         }
                     }
+                    post {
+                        success {
+                            setBuildStatus("build succeeded", "SUCCESS");
+                        }
+                        failure {
+                            setBuildStatus("build failed", "FAILURE");
+                        }
+                    }
                 }
                 stage('6 RHEL7') {
                     agent {
@@ -122,6 +154,14 @@ pipeline {
                                 stash includes: "test/**/*", name: "rhel7-unit-tests"
                                 stash includes: "carta_backend", name: "rhel7-backend"
                             }
+                        }
+                    }
+                    post {
+                        success {
+                            setBuildStatus("build succeeded", "SUCCESS");
+                        }
+                        failure {
+                            setBuildStatus("build failed", "FAILURE");
                         }
                     }
                 }
@@ -142,15 +182,15 @@ pipeline {
                             }
                         }
                     }
+                    post {
+                        success {
+                            setBuildStatus("build succeeded", "SUCCESS");
+                        }
+                        failure {
+                            setBuildStatus("build failed", "FAILURE");
+                        }
+                    }
                 }
-            }
-        }
-        post {
-            success {
-                setBuildStatus("build succeeded", "SUCCESS");
-            }
-            failure {
-                setBuildStatus("build failed", "FAILURE");
             }
         }
         stage('Unit Tests') {
@@ -519,14 +559,14 @@ pipeline {
                         }
                     }
                 }
-            }
-        }
-        post {
-            success {
-                setBuildStatus("build succeeded", "SUCCESS");
-            }
-            failure {
-                setBuildStatus("build failed", "FAILURE");
+                post {
+                    success {
+                        setBuildStatus("build succeeded", "SUCCESS");
+                    }
+                    failure {
+                        setBuildStatus("build failed", "FAILURE");
+                    }
+                }
             }
         }
         stage('Finished') {
