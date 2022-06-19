@@ -513,13 +513,15 @@ pipeline {
                 }
             }
         }
-    }
-    post {
-        success {
-            setBuildStatus("Build succeeded", "SUCCESS");
-        }
-        failure {
-            setBuildStatus("Build failed", "FAILURE");
+        stage('Finished') {
+            agent {
+            label "macos12-agent"
+            }
+            steps {
+                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                    sh "ls"
+                } 
+            } 
         }
     }
 }
