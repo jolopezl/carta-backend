@@ -403,6 +403,14 @@ pipeline {
                                 file_browser()
                             }
                         }
+                        post {
+                            success {
+                                setBuildStatus("build succeeded", "SUCCESS");
+                            }
+                            failure {
+                                setBuildStatus("build failed", "FAILURE");
+                            }
+                        }
                     }
                     stage('animator') {
                         agent {
@@ -415,6 +423,14 @@ pipeline {
                                 sh "ASAN_OPTIONS=suppressions=${WORKSPACE}/debug/asan/myasan.supp LSAN_OPTIONS=suppressions=${WORKSPACE}/debug/asan/myasan-leaks.supp ASAN_SYMBOLIZER_PATH=llvm-symbolizer ./carta_backend /images --top_level_folder /images --port 3112 --omp_threads 8 --debug_no_auth --no_frontend --no_database --verbosity=5 &"
                                 unstash "${PLATFORM}-ICD"
                                 animator()
+                            }
+                        }
+                        post {
+                            success {
+                                setBuildStatus("build succeeded", "SUCCESS");
+                            }
+                            failure {
+                                setBuildStatus("build failed", "FAILURE");
                             }
                         }
                     }
@@ -445,6 +461,14 @@ pipeline {
                                 region_manipulation()
                             }
                         }
+                        post {
+                            success {
+                                setBuildStatus("build succeeded", "SUCCESS");
+                            }
+                            failure {
+                                setBuildStatus("build failed", "FAILURE");
+                            }
+                        }
                     }
                     stage('cube_histogram') {
                         agent {
@@ -457,6 +481,14 @@ pipeline {
                                 sh "ASAN_OPTIONS=suppressions=${WORKSPACE}/debug/asan/myasan.supp LSAN_OPTIONS=suppressions=${WORKSPACE}/debug/asan/myasan-leaks.supp ASAN_SYMBOLIZER_PATH=llvm-symbolizer ./carta_backend /images --top_level_folder /images --port 3112 --omp_threads 8 --debug_no_auth --no_frontend --no_database --verbosity=5 &"
                                 unstash "${PLATFORM}-ICD"
                                 cube_histogram()
+                            }
+                        }
+                        post {
+                            success {
+                                setBuildStatus("build succeeded", "SUCCESS");
+                            }
+                            failure {
+                                setBuildStatus("build failed", "FAILURE");
                             }
                         }
                     }
@@ -487,6 +519,14 @@ pipeline {
                                 raster_tiles()
                             }
                         }
+                        post {
+                            success {
+                                setBuildStatus("build succeeded", "SUCCESS");
+                            }
+                            failure {
+                                setBuildStatus("build failed", "FAILURE");
+                            }
+                        }
                     }
                     stage('catalog') {
                         agent {
@@ -499,6 +539,14 @@ pipeline {
                                 sh "ASAN_OPTIONS=suppressions=${WORKSPACE}/debug/asan/myasan.supp LSAN_OPTIONS=suppressions=${WORKSPACE}/debug/asan/myasan-leaks.supp ASAN_SYMBOLIZER_PATH=llvm-symbolizer ./carta_backend /images --top_level_folder /images --port 3112 --omp_threads 8 --debug_no_auth --no_frontend --no_database --verbosity=5 &"
                                 unstash "${PLATFORM}-ICD"
                                 catalog()
+                            }
+                        }
+                        post {
+                            success {
+                                setBuildStatus("build succeeded", "SUCCESS");
+                            }
+                            failure {
+                                setBuildStatus("build failed", "FAILURE");
                             }
                         }
                     }
@@ -515,6 +563,14 @@ pipeline {
                                 moment()
                             }
                         }
+                        post {
+                            success {
+                                setBuildStatus("build succeeded", "SUCCESS");
+                            }
+                            failure {
+                                setBuildStatus("build failed", "FAILURE");
+                            }
+                        }
                     }
                     stage('resume') {
                         agent {
@@ -527,6 +583,14 @@ pipeline {
                                 sh "ASAN_OPTIONS=suppressions=${WORKSPACE}/debug/asan/myasan.supp LSAN_OPTIONS=suppressions=${WORKSPACE}/debug/asan/myasan-leaks.supp ASAN_SYMBOLIZER_PATH=llvm-symbolizer ./carta_backend /images --top_level_folder /images --port 3112 --omp_threads 8 --debug_no_auth --no_frontend --no_database --verbosity=5 &"
                                 unstash "${PLATFORM}-ICD"
                                 resume()
+                            }
+                        }
+                        post {
+                            success {
+                                setBuildStatus("build succeeded", "SUCCESS");
+                            }
+                            failure {
+                                setBuildStatus("build failed", "FAILURE");
                             }
                         }
                     }
@@ -543,6 +607,14 @@ pipeline {
                                 match()
                             }
                         }
+                        post {
+                            success {
+                                setBuildStatus("build succeeded", "SUCCESS");
+                            }
+                            failure {
+                                setBuildStatus("build failed", "FAILURE");
+                            }
+                        }
                     }
                     stage('close_file') {
                         agent {
@@ -557,14 +629,14 @@ pipeline {
                                 close_file()
                             }
                         }
-                    }
-                }
-                post {
-                    success {
-                        setBuildStatus("build succeeded", "SUCCESS");
-                    }
-                    failure {
-                        setBuildStatus("build failed", "FAILURE");
+                        post {
+                            success {
+                                setBuildStatus("build succeeded", "SUCCESS");
+                            }
+                            failure {
+                                setBuildStatus("build failed", "FAILURE");
+                            }
+                        }
                     }
                 }
             }
